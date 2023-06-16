@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Horario de Encendido de Velas de Shabat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            color: blue;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        button {
+            margin-top: 10px;
+        }
+    </style>
+    <script>
+        function obtenerHorario() {
+            var ciudad = document.getElementById("ciudad").value;
+
+            // Realizar la solicitud al servidor
+            fetch("https://www.hebcal.com/shabbat?cfg=json&geo=geoname&city=" + ciudad + "&M=on")
+                .then(response => response.json())
+                .then(data => {
+                    if (data.items && data.items.length > 0) {
+                        var horaEncendido = data.items[0].title;
+                        document.getElementById("horario").textContent = "El horario de encendido de velas de Shabat en " + ciudad + " es a las " + horaEncendido + ".";
+                    } else {
+                        document.getElementById("horario").textContent = "No se pudo obtener el horario de encendido de velas para " + ciudad + ".";
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    document.getElementById("horario").textContent = "Ocurrió un error al obtener el horario de encendido de velas.";
+                });
+        }
+    </script>
+</head>
+<body>
+    <h1>Horario de Encendido de Velas de Shabat</h1>
+
+    <label for="ciudad">Ciudad:</label>
+    <input type="text" id="ciudad">
+
+    <button onclick="obtenerHorario()">Obtener Horario</button>
+
+    <div id="horario"></div>
+</body>
+</html>
